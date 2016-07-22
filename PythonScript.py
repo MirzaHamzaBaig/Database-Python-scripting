@@ -7,84 +7,73 @@ import random
 import optparse
 
 class User():
-        def Insert(self):
-                print('To Add your information follow the procedure')
+        def Insert(self,Fname,Email,Address,Phoneno,Age):
+                self.Fname = Fname
+                self.Email = Email
+                self.Address = Address
+                self.Phoneno = Phoneno
+                self.Age = Age
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
-                curr = db.cursor()
-                Fname = raw_input("Enter your FName: ")
-                Email = raw_input("Enter your email: ")
-                Address = raw_input("Enter your address: ")
-                Phoneno = int(raw_input("Enter your number: "))
-                Age = int(raw_input("Enter your age: "))
-                try:
-                    curr.execute("""INSERT INTO hvduser(Fname,Email,Address,Phoneno,Age) VALUES ('%s','%s','%s',%d,%d)""" %(Fname,Email,Address,Phoneno,Age))
-                    db.commit()
-                except:
-                    db.rollback()
+                curr = db.cursor()              
+                curr.execute("""INSERT INTO hvduser(Fname,Email,Address,Phoneno,Age) VALUES ('%s','%s','%s',%s,%s)""" %(Fname,Email,Address,Phoneno,Age))
+                db.commit()
                 print("Information Added")
                 curr.execute("""SELECT * FROM hvduser;""")
                 print curr.fetchall()
                 ((Fname,Email,Address,Phoneno,Age),)
-                return("%s,%s,%s,%d,%d") % (Fname,Email,Address,Phoneno,Age)
+                return("%s,%s,%s,%s,%s") % (Fname,Email,Address,Phoneno,Age)
 
-        def Delete(self):
-                print('Deletion Process')
+        def Delete(self,idhvduser):
+                self.idhvduser=idhvduser
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
                 curr = db.cursor()
-                idnumber = int(raw_input("Enter the id number,You want to delete: "))
-                curr.execute(("""DELETE FROM hvduser WHERE idhvduser = %d;""") % (idnumber))
+                curr.execute(("""DELETE FROM hvduser WHERE idhvduser = %d;""") % (idhvduser))
                 db.commit()  
                 print("Information Deleted")
                 curr.execute("""SELECT * FROM hvduser;""")
-                return("%d") % (idnumber)
+                return("%d") % (idhvduser)
                 
 
-        def Update(self):
-                print('Updation process')
+        def Update(self,newFname,newEmail,newAddress,newPhoneno,newAge,idhvduser):
+                self.newFname=newFname
+                self.newEmail=newEmail
+                self.newAddress=newAddress
+                self.newPhoneno=newPhoneno
+                self.newAge=newAge
+                self.idhvduser=idhvduser
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
                 curr = db.cursor()
-                idnumberr = int(raw_input("Input the ID number you want to update: "))
-                curr.execute(("""SELECT idhvduser FROM hvduser WHERE idhvduser = %d;""") % (idnumberr))
-                newFname = raw_input("Enter new name")
-                newEmail = raw_input("Enter new email")
-                newAddress = raw_input("Enter new address")
-                newPhoneno = int(raw_input("Enter new Phoneno"))
-                newAge = int(raw_input("Enter new Age"))
-                curr.execute(("""UPDATE hvduser set Fname = '%s',Email ='%s',Address = '%s',Phoneno=%d,Age=%d WHERE (Fname,Email,Address,Phoneno,Age);""") % (newFname,newEmail,newAddress,newPhoneno,newAge))
+                curr.execute(("""SELECT idhvduser FROM hvduser WHERE idhvduser = %d;""") % (idhvduser))
+                curr.execute(("UPDATE hvduser SET Fname ='%s',Email ='%s',Address ='%s',Phoneno=%d,Age=%d WHERE idhvduser = %d;" % (newFname,newEmail,newAddress,newPhoneno,newAge,idhvduser)))
                 db.commit()
-                print("Information DUpdated")
+                print("Information Updated")
                 curr.execute("""SELECT * FROM hvduser;""")
                 print curr.fetchall()
-                ((newFname,newEmail,newAddress,newPhoneno,newAge),)
-                return("%d") % (idnumberr)
-                
+                ((idhvduser,newFname,newEmail,newAddress,newPhoneno,newAge),)
+                return("%s,%s,%s,%d,%d,%d") % (newFname,newEmail,newAddress,newPhoneno,newAge,idhvduser)
+             
 
-        def Display():
+        def Display(self):
                 print("Listing all the users of Database")
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
                 curr = db.cursor()
                 curr.execute("""SELECT * FROM hvduser;""")
+                print curr.fetchall()
                 return;
 
-        def AddRecordHVD(self):
-                print('To Add your HVD record information,follow the procedure')
+        def AddRecordHVD(self,FName,CPU,DiskFb,GivenDate):
+                self.FName=FName
+                self.CPU=CPU
+                self.DiskFb=DiskFb
+                self.GivenDate=GivenDate
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
                 curr = db.cursor()
-                FName = raw_input("Enter your FName: ")
-                CPU = raw_input("Enter your CPU: ")
-                Diskfb = raw_input("Enter your DiskFb: ")
-                GivenDate = long(raw_input("Enter Given Date: "))
-                try:
-                    sql=("""INSERT INTO hvdinfo(FName,CPU,Diskfb,GivenDate) VALUES ('%s','%s','%s',%d)""" %(FName,CPU,Diskfb,GivenDate))
-                    curr.execute(sql)
-                    db.commit()
-                except:
-                    db.rollback()
-                print("Record Added")
+                curr.execute("""INSERT INTO hvdinfo(FName,CPU,DiskFb,GivenDate) VALUES ('%s','%s','%s',%s)""" %(FName,CPU,DiskFb,GivenDate))
+                db.commit()
                 curr.execute("SELECT * FROM hvdinfo;")
                 print curr.fetchall()
-                ((FName,CPU,Diskfb,GivenDate),)
-                return("%s,%s,%s,%d") % (FName,CPU,Diskfb,GivenDate)
+                ((FName,CPU,DiskFb,GivenDate),)
+                return("%s,%s,%s,%s") % (FName,CPU,DiskFb,GivenDate)
                 
 
         def bool():
@@ -96,41 +85,43 @@ class User():
                     return v.lower() in ("Yes","true","t","1")
 
         def DeleteHVDRecords():
-                print('Delete the HVD Record')
+                self.idhvdinfo=idhvdinfo
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
                 curr = db.cursor()
-                idnumber = int(raw_input("Enter the id number,You want to delete: "))
-                curr.execute(("""DELETE FROM hvdinfo WHERE idhvdinfo = %d;""") % (idnumber))
-                db.commit()
+                curr.execute(("""DELETE FROM hvduser WHERE idhvdinfo = %d;""") % (idhvdinfo))
+                db.commit()  
                 print("Record Deleted")
-                curr.execute("""SELECT * FROM info;""")
-                return("%d") % (idnumber)
+                curr.execute("""SELECT * FROM hvdinfo;""")
+                return("%d") % (idhvdinfo)
                 
 
-        def UpdateHVDRecord():
-                print('Update HVD record')
+        def UpdateHVDRecord(self,newFName,newCPU,newDiskFb,newGivenDate,idhvdinfo):
+                self.newFName=newFName
+                self.newCPU=newCPU
+                self.newDiskFb=newDiskFb
+                self.newGivenDate=newGivenDate
+                self.idhvdinfo=idhvdinfo
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
                 curr = db.cursor()
-                idnumberr = int(raw_input("Input the ID number you want to update: "))
-                curr.execute(("""SELECT idhvdinfo FROM hvdinfo WHERE idhvdinfo = %d;""") % (idnumberr))
-                newFname = raw_input("Enter new name")
-                newCPU = raw_input("Enter new CPU")
-                newDiskfb = raw_input("Enter new Diskfb")
-                newGivenDate = int(raw_input("Enter new Date"))
-                curr.execute(("""UPDATE info set Fname = '%s',CPU ='%s',Diskfb = '%s',GivenDate=%d WHERE (Fname,CPU,Disfb,GivenDate);""") % (newFname,newCPU,newDiskfb,newGivenDate))
+                curr.execute(("""SELECT idhvdinfo FROM hvdinfo WHERE idhvdinfo = %d;""") % (idhvdinfo))
+                curr.execute(("UPDATE hvdinfo SET FName ='%s',CPU ='%s',DiskFb ='%s',GivenDate=%d WHERE idhvdinfo = %d;" % (newFName,newCPU,newDiskFb,newGivenDate,idhvdinfo)))
                 db.commit()
                 print("Record Updated")
-                curr.execute("""SELECT * FROM info;""")
-                return("%d") % (idnumberr)
+                curr.execute("""SELECT * FROM hvdinfo;""")
+                print curr.fetchall()
+                ((idhvdinfo,newFName,newCPU,newDiskFb,newGivenDate),)
+                return("%s,%s,%s,%d,%d") % (newFName,newCPU,newDiskFb,newGivenDate,idhvdinfo)
                 
 
-        def HVDRecordsUsers():
-                print('Displaying all the records associated to users')
+        def HVDRecordsUsers(self,idhvduser):
+                self.idhvduser=idhvduser
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
                 curr = db.cursor()
-                curr.execute("""SELECT hvduser.idhvduser,hvduser.Fname,hvdinfo.CPU,hvdinfo.DISKfb,hvdinfo.GivenDate FROM hvdinfo INNER JOIN hvduser ON hvduser.Fname = hvdinfo.FName;""")
+                curr.execute(("""SELECT idhvduser FROM hvduser WHERE idhvduser = %d""") % (idhvduser))
+                curr.execute("""SELECT hvduser.Fname,hvdinfo.CPU,hvdinfo.DiskFb,hvdinfo.GivenDate,hvduser.idhvduser,hvdinfo.idhvdinfo FROM hvduser INNER JOIN hvdinfo ON hvduser.idhvduser = hvdinfo.idhvdinfo;""")
                 db.commit()
-                curr.execute("""SELECT * FROM info;""")
+                curr.execute("""SELECT hvduser.Fname,hvdinfo.CPU,hvdinfo.DiskFB,hvdinfo.GivenDate FROM hvduser,hvdinfo WHERE idhvduser = idhvdinfo;""")
+                print curr.fetchall()
                 return;
                 
 
@@ -138,53 +129,119 @@ class User():
                 print('Displaying all the records notassociated to users')
                 db = MySQLdb.connect(host="localhost",user="root",passwd="hamzabaig",db="hvd")
                 curr = db.cursor()
-                curr.execute("""SELECT idhvduser,FName,CPU,DISKfb,GivenDate FROM hvduser,hvdinfo WHERE hvduser.Fname = hvdinfo.FName AND hvdinfo.FName = NULL;""")
+                curr.execute("""SELECT FName,CPU,DISKfb,GivenDate FROM hvdinfo;""")
                 return;
 
 def Main():
                 parser = optparse.OptionParser(('usage %prog :'+\
-                        "-a=Insert,-d=Delete,-u=Upgrade,--ih=AddRecordHVD,-b=bool,--dh=DeleteHVDRecords,--uh=UpdateHVDRecord,--rh=RecordsHVDUsers,--nh=NRecordsHVDUsers"))
-                parser.add_option('-a',action='store',dest='Insert',help='To Insert your user Information')
-                parser.add_option('-d',dest='Delete',help="To delete your user Information")
+                        "-n=Fname,-e=Email,-a=Address,--p=Phoneno,-g=Age,--cp=CPU,-f=DiskFb,-t=GivenDate,-c=idhvduser--i=Insert,-d=Delete,-u=Upgrade,--ih=AddRecordHVD,-b=bool,--dh=DeleteHVDRecords,--uh=UpdateHVDRecord,--rh=RecordsHVDUsers,--nh=NRecordsHVDUsers"))
+                parser.add_option('-n',action='store',dest='Fname',type=str,help='Enter user name')
+                parser.add_option('-e',action='store',dest='Email',type=str,help='Enter user email')
+                parser.add_option('-a',action='store',dest='Address',type=str,help='Enter user address')
+                parser.add_option('--p',action='store',dest='Phoneno',type=int,help='Enter user phoneno')
+                parser.add_option('-g',action='store',dest='Age',type=int,help='Enter user age')
+                parser.add_option('--nn',action='store',dest='FName',type=str,help='Enter hvd first name')
+                parser.add_option('--cp',action='store',dest='CPU',type=str,help="Enter your CPU")
+                parser.add_option('-f',action='store',dest='DiskFb',type=str,help="Enter your Diskfb")
+                parser.add_option('-t',action='store',dest='GivenDate',type=int,help="Enter the given date")
+                parser.add_option('-c',action='store',dest='idhvduser',type=int,help='Enter id number for delete or update')
+                parser.add_option('-z',action='store',dest='idhvdinfo',type=int,help='Enter the id number of HVD record')
+                parser.add_option('--i',action='store',dest='Insert',help='To Insert your user Information')
+                parser.add_option('-d',action='append',dest='Delete',help="To delete your user Information")
                 parser.add_option('-u',action='store',dest='Update',help="To update your user information")
                 parser.add_option('--ih',action='store',dest='AddRecordHVD',help='To Enter HVD Record')
                 parser.add_option('-b',action='store_true',dest='bool',default=False,help='Enter the HVD status')
                 parser.add_option('--dh',dest='DeleteHVDRecords',help='To Delete your HVD record')
                 parser.add_option('--uh',action='store',dest='UpdateHVDRecord',help='Update your HVD Record')
-                parser.add_option('--rh',dest='RecordsHVDUsers',help='Displays Records associated to Users')
-                parser.add_option('--nh',dest='NRecordsHVDUsers',help='Displays Records not associated to Users')
-                parser.add_option('--du',dest='Display',help='Displays user information')
+                parser.add_option('--rh',dest='HVDRecordsUsers',help='Displays Records associated to Users')
+                parser.add_option('--nh',dest='HVDNRecordsUsers',help='Displays Records not associated to Users')
+                parser.add_option('--du',action='append',dest='Display',help='Displays user information')
                 (options, args) = parser.parse_args()
                 if(options.Insert):
-                        obj = User()
-                        obj.Insert()
+                        Fname = options.Fname
+                        Email = options.Email
+                        Address = options.Address
+                        Phoneno = options.Phoneno
+                        Age = options.Age
+                        if (options.Fname == Fname and options.Email == Email and options.Address == Address and options.Phoneno == Phoneno and options.Age == Age):
+                                obj = User()
+                                obj.Insert(Fname,Email,Address,Phoneno,Age)
+                                print("Information added")
+                        else: 
+                                print('please specify all required arguments')
+                                exit(-1)
                 elif(options.Delete):
-                        obj = User()
-                        obj.Delete()
+                        idhvduser=options.idhvduser
+                        if(options.idhvduser == idhvduser):
+                                obj = User()
+                                obj.Delete(idhvduser)
+                        else:
+                                print("Specify required id")
+                                exit(-1)
                 elif(options.Update):
-                        obj = User()
-                        obj.Update()
+                        Fname = options.Fname
+                        Email = options.Email
+                        Address = options.Address
+                        Phoneno = options.Phoneno
+                        Age = options.Age
+                        idhvduser = options.idhvduser
+                        if(options.idhvduser == idhvduser):
+                                obj = User()
+                                obj.Update(Fname,Email,Address,Phoneno,Age,idhvduser)
+                                print("Updated")
+                        else:
+                                print('Specify required id')
+                                exit(-1)
                 elif(options.Display):
                         obj = User()
                         obj.Display()
                 elif(options.AddRecordHVD):
-                        obj = User()
-                        obj.AddRecordHVD()
+                        FName = options.FName
+                        CPU = options.CPU
+                        DiskFb = options.DiskFb
+                        GivenDate = options.GivenDate
+                        if (options.FName == FName and options.CPU == CPU and options.DiskFb == DiskFb and options.GivenDate == GivenDate):
+                                obj = User()
+                                obj.AddRecordHVD(FName,CPU,DiskFb,GivenDate)
+                                print("Record added")
+                        else: 
+                                print('please specify all required arguments')
+                                exit(-1)
                 elif(options.bool):
                         obj = User()
                         obj.bool()
                 elif(options.DeleteHVDRecords):
-                        obj=User()
-                        obj.DeleteHVDRecords()
+                        idhvdinfo=options.idhvdinfo
+                        if(options.idhvdinfo == idhvdinfo):
+                                obj = User()
+                                obj.Delete(idhvdinfo)
+                        else:
+                                print("Specify required id")
+                                exit(-1)
                 elif(options.UpdateHVDRecord):
+                        FName = options.FName
+                        CPU = options.CPU
+                        DiskFb = options.DiskFb
+                        GivenDate = options.GivenDate
+                        idhvdinfo = options.idhvdinfo
+                        if(options.idhvdinfo == idhvdinfo):
+                                obj = User()
+                                obj.UpdateHVDRecord(FName,CPU,DiskFb,GivenDate,idhvdinfo)
+                                
+                        else:
+                                print("Sepcify all required arguments")
+                                exit(0)
+                elif(options.HVDRecordsUsers):
+                        idhvduser=options.idhvduser
+                        if(idhvduser == options.idhvduser):
+                                obj=User()
+                                obj.HVDRecordsUsers(idhvduser)
+                        else:
+                                print("Enter the id you want to associate")
+                                exit(-1)
+                elif(options.HVDNRecordsUsers):
                         obj=User()
-                        obj.UpdateHVDRecords()
-                elif(options.RecordsHVDUsers):
-                        obj=User()
-                        obj.RecordsHVDUsers()
-                elif(options.NRecordsHVDUsers):
-                        obj=User()
-                        obj.NRecordsHVDUsers()
+                        obj.HVDNRecordsUsers()
                 else:
                        exit()
                 
@@ -196,3 +253,10 @@ curr = db.cursor()
 
 curr.close()
 db.close()
+
+        
+    
+
+             
+        
+        
