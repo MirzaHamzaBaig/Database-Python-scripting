@@ -1,5 +1,6 @@
 # Database-Python-scripting
 #Adds,Updates,displays,Associates users to respective HVDs
+#Additional settings
 
 import os
 import MySQLdb
